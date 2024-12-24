@@ -32,7 +32,7 @@ function App() {
       <div 
         className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
         style={{
-          backgroundImage: 'url("https://kpopping.com/documents/95/0/220925-Dreamcatcher-Gahyeon-documents-2(1).jpeg?v=456a5")',
+          backgroundImage: 'url("https://w.wallhaven.cc/full/zy/wallhaven-zywe5j.jpg")',
           opacity: isLoaded ? 1 : 0
         }}
       />

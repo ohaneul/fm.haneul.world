@@ -101,7 +101,7 @@ function App() {
             )}
           </button>
           <audio ref={audioRef} autoPlay loop>
-            <source src="audio.m4a" type="audio/mp4" />
+            <source src="/src/audio.m4a" type="audio/mp4" />
           </audio>
         </div>
       </div>

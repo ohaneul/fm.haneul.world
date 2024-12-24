@@ -21,9 +21,9 @@ function App() {
   };
 
   const socialLinks = [
-    { Icon: Music2, color: '#1DB954', href: '#', label: 'Spotify' },
-    { Icon: GamepadIcon, color: '#171a21', href: '#', label: 'Steam' },
-    { Icon: GithubIcon, color: '#f5f5f5', href: '#', label: 'Website' }
+    { Icon: Music2, color: '#1DB954', href: 'https://open.spotify.com/user/cpnr5yepksvx0qn7c5z29aw2q', label: 'Spotify' },
+    { Icon: GamepadIcon, color: '#171a21', href: 'https://steamcommunity.com/id/kyuripyo/', label: 'Steam' },
+    { Icon: RSS, color: '#f5f5f5', href: 'https://www.haneul.world', label: 'Website' }
   ];
 
   return (

@@ -8,24 +8,7 @@ function App() {
 
   useEffect(() => {
     if (audioRef.current) {
-      const audio = audioRef.current;
-      console.log("Audio element:", audio);
-      console.log("Audio source:", audio.src);
-
-      audio.volume = 0.3;
-      audio.muted = true;
-
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            audio.muted = false;
-            console.log("Audio is playing");
-          })
-          .catch((error) => {
-            console.error("Autoplay blocked:", error);
-          });
-      }
+      audioRef.current.volume = 0.3;
     }
     setIsLoaded(true);
   }, []);

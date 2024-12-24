@@ -8,6 +8,23 @@ playPauseBtn.addEventListener('click', togglePlay);
 muteBtn.addEventListener('click', toggleMute);
 volumeSlider.addEventListener('input', handleVolume);
 
+// Automatically play audio on page load, muted
+window.addEventListener('load', () => {
+  audio.muted = true; // Mute the audio initially
+  audio.play().catch(error => {
+    console.log('Audio playback failed:', error);
+  });
+});
+
+// Unmute audio when the user interacts with the page
+document.body.addEventListener('click', () => {
+  if (audio.muted) {
+    audio.muted = false; // Unmute the audio on first click
+    muteBtn.textContent = '🔊'; // Update mute button
+  }
+});
+
+// Toggle play/pause
 function togglePlay() {
   if (audio.paused) {
     audio.play();
@@ -20,15 +37,17 @@ function togglePlay() {
   }
 }
 
+// Toggle mute/unmute
 function toggleMute() {
   audio.muted = !audio.muted;
   muteBtn.textContent = audio.muted ? '🔇' : '🔊';
   muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute' : 'Mute');
 }
 
+// Handle volume change
 function handleVolume() {
   audio.volume = volumeSlider.value;
-  audio.muted = false;
+  audio.muted = false; // Unmute when volume is adjusted
   muteBtn.textContent = '🔊';
   muteBtn.setAttribute('aria-label', 'Mute');
 }
@@ -89,18 +108,37 @@ camera.position.z = 15;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
+const mouseDistanceThreshold = 2; // Distance threshold for interaction
+const pushForce = 0.5; // Increased force applied to move the voxel
+const damping = 0.05; // Damping factor for smooth return
+
+// Store original positions for damping effect
+const originalPositions = voxels.map(voxel => voxel.position.clone());
+
 function onMouseMove(event) {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
-
   const intersects = raycaster.intersectObjects(voxels);
 
-  voxels.forEach((voxel) => {
-    if (intersects.find((intersect) => intersect.object === voxel)) {
+  // Calculate mouse position in 3D space
+  const mouse3D = new THREE.Vector3(mouse.x * 10, mouse.y * 10, 0);
+
+  voxels.forEach((voxel, index) => {
+    // Check distance from mouse
+    const distance = voxel.position.distanceTo(camera.position.clone().add(mouse3D));
+
+    if (intersects.find((intersect) => intersect.object === voxel) || distance < mouseDistanceThreshold) {
+      // Calculate direction from voxel to mouse
+      const direction = new THREE.Vector3().subVectors(voxel.position, camera.position.clone().add(mouse3D)).normalize();
+      // Apply force to move voxel away from mouse
+      voxel.position.add(direction.multiplyScalar(pushForce)); // Move voxel away
       voxel.scale.set(1.2, 1.2, 1.2);
     } else {
+      // Damping effect to return to original position
+      const originalPosition = originalPositions[index];
+      voxel.position.lerp(originalPosition, damping); // Smoothly return to original position
       voxel.scale.set(1, 1, 1);
     }
   });
